@@ -24,11 +24,41 @@ class DictionaryExtensionsTests: XCTestCase {
 	}
 	
 	func testHasKey() {
-		XCTAssert(testDict.has(key: "testKey") == true && testDict.has(key: "anotherKey") == false, "Couldn't get correct value for \(#function)")
+		XCTAssert(testDict.has(key: "testKey"))
+		XCTAssertFalse(testDict.has(key: "anotherKey"))
+	}
+	
+	func testJsonString() {
+		XCTAssertNotNil(testDict.jsonString())
+		XCTAssert(testDict.jsonString()!.contain("\"testArrayKey\":[1,2,3,4,5]"))
+		XCTAssert(testDict.jsonString()!.contain("\"testKey\":\"testValue\""))
+		
+		XCTAssert(testDict.jsonString(prettify: true)!.contain("[\n    1,\n    2,\n    3,\n    4,\n    5\n  ]"))
+		
+		XCTAssertNil(["key": NSObject()].jsonString())
+		XCTAssertNil([1:2].jsonString())
 	}
 	
 	func testJsonData() {
-		let jsonString = "{\"testKey\":\"testValue\",\"testArrayKey\":[1,2,3,4,5]}"
-		XCTAssert(testDict.jsonString() == jsonString, "Couldn't get correct value for \(#function)")
+		let dict = ["key": "value"]
+		
+		let jsonString = "{\"key\":\"value\"}"
+		let jsonData = jsonString.data(using: .utf8)
+	
+		let prettyJsonString = "{\n  \"key\" : \"value\"\n}"
+		let prettyJsonData = prettyJsonString.data(using: .utf8)
+		
+		XCTAssertEqual(dict.jsonData(), jsonData)
+		XCTAssertEqual(dict.jsonData(prettify: true), prettyJsonData)
+		
+		XCTAssertNil(["key": NSObject()].jsonData())
+		XCTAssertNil([1:2].jsonData())
 	}
+	
+	func testLowercaseAllKeys() {
+		var dict = ["tEstKeY": "value"]
+		dict.lowercaseAllKeys()
+		XCTAssertEqual(dict, ["testkey": "value"])
+	}
+	
 }

@@ -22,61 +22,127 @@ class IntExtensionsTests: XCTestCase {
 	}
 	
 	func testAbs() {
-		XCTAssert((-9).abs == 9, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual((-9).abs, 9)
+	}
+	
+	func testIsPositive() {
+		XCTAssert(1.isPositive)
+		XCTAssertFalse(0.isPositive)
+		XCTAssertFalse((-1).isPositive)
+	}
+	
+	func testIsNegative() {
+		XCTAssert((-1).isNegative)
+		XCTAssertFalse(0.isNegative)
+		XCTAssertFalse(1.isNegative)
+	}
+	
+	func testDouble() {
+		XCTAssertEqual((-1).double, Double(-1))
+		XCTAssertEqual(2.double, Double(2))
+	}
+	
+	func testFloat() {
+		XCTAssertEqual((-1).float, Float(-1))
+		XCTAssertEqual(2.float, Float(2))
+	}
+	
+	func testString() {
+		XCTAssertEqual(2.string, "2")
 	}
 	
 	func testDegreesToRadians() {
-		XCTAssert(180.degreesToRadians == M_PI, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(180.degreesToRadians, Double.pi)
 	}
 	
 	func testDigits() {
-		XCTAssert(180.digits == [1, 8, 0], "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(180.digits, [1, 8, 0])
 	}
 	
 	func testDigitsCount() {
-		XCTAssert(180.digitsCount == 3, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(180.digitsCount, 3)
 	}
 	
 	func testGcd() {
-		XCTAssert(8.gcd(of: 20) == 4, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(8.gcd(of: 20), 4)
+	}
+	
+	func testCGFloat() {
+		XCTAssertEqual(1.cgFloat, CGFloat(1))
 	}
 	
 	func testIsEven() {
-		XCTAssert(2.isEven == true && 3.isEven == false, "Couldn't get correct value for \(#function)")
+		XCTAssert(2.isEven)
+		XCTAssertFalse(3.isEven)
 	}
 	
 	func testIsOdd() {
-		XCTAssert(3.isOdd == true && 2.isOdd == false, "Couldn't get correct value for \(#function)")
+		XCTAssert(3.isOdd)
+		XCTAssertFalse(2.isOdd)
 	}
 	
 	func testLcm() {
-		XCTAssert(4.lcm(of: 3) == 12, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(4.lcm(of: 3), 12)
 	}
 	
 	func testRadiansToDegrees() {
-		XCTAssert(Int(3.radiansToDegrees) == 171, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(Int(3.radiansToDegrees), 171)
 	}
 	
 	func testRandomBetween() {
-		XCTAssert(Int.randomBetween(min: 1, max: 5) > 0 && Float.randomBetween(min: 1, max: 5) < 5, "Couldn't get correct value for \(#function)")
+		XCTAssertGreaterThan(Int.random(between: 1, and: 5), 0)
+		XCTAssertLessThan(Int.random(between: 1, and: 5), 6)
+		
+		XCTAssertGreaterThan(Int(randomBetween: 1, and: 5), 0)
+		XCTAssertLessThan(Int(randomBetween: 1, and: 5), 6)
+		
+		XCTAssertGreaterThan(Int.random(inRange: 1...5), 0)
+		XCTAssertLessThan(Int.random(inRange: 1...5), 6)
+		
+		XCTAssertGreaterThan(Int(randomInRange: 1...5), 0)
+		XCTAssertLessThan(Int(randomInRange: 1...5), 6)
 	}
 	
 	func testRomanNumeral() {
-		XCTAssert(10.romanNumeral == "X" && (-1).romanNumeral == nil, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(10.romanNumeral, "X")
+		XCTAssertNil((-1).romanNumeral)
 	}
 	
 	func testTimeString() {
-		XCTAssert(120.timeString == "2 min", "Couldn't get correct value for \(#function)")
+		XCTAssertEqual((-1).timeString, "0 sec")
+		XCTAssertEqual(45.timeString, "45 sec")
+		XCTAssertEqual(120.timeString, "2 min")
+		XCTAssertEqual(3600.timeString, "1h")
+		XCTAssertEqual(3660.timeString, "1h 1m")
+	}
+	
+	func testKFormatted() {
+		XCTAssertEqual(10.kFormatted, "0k")
+		XCTAssertEqual((-10).kFormatted, "0k")
+		
+		XCTAssertEqual(0.kFormatted, "0k")
+		
+		XCTAssertEqual(1000.kFormatted, "1k")
+		XCTAssertEqual((-1000).kFormatted, "-1k")
+		
+		XCTAssertEqual(100000.kFormatted, "100k")
+		XCTAssertEqual((-100000).kFormatted, "-100k")
+		
+		XCTAssertEqual(1000000.kFormatted, "10kk")
+	}
+	
+	func testAsLocaleCurrency() {
+		let num = 10
+		if let symbol = Locale.current.currencySymbol {
+			XCTAssert(num.asLocaleCurrency.contains(symbol))
+		}
+		XCTAssert(num.asLocaleCurrency.contains("\(num)"))
 	}
 	
 	func testOperators() {
-		print(5 ** 2)
-		//XCTAssert((5 ^ 2) == 25, "Couldn't get correct value for \(#function)")
-		
-		XCTAssert((5 ± 2) == (3, 7) || (5 ± 2) == (7, 3), "Couldn't get correct value for \(#function)")
-		
-		XCTAssert((±2) == (2, -2) || (±2) == (-2, 2), "Couldn't get correct value for \(#function)")
-		
-		XCTAssert((√25) == 5.0, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(5 ** 2, 25)
+		XCTAssert((5 ± 2) == (3, 7) || (5 ± 2) == (7, 3))
+		XCTAssert((±2) == (2, -2) || (±2) == (-2, 2))
+		XCTAssertEqual(√25, 5.0)
 	}
 }

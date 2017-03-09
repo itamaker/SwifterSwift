@@ -22,36 +22,84 @@ class DoubleExtensionsTests: XCTestCase {
 	}
 	
 	func testAbs() {
-		XCTAssert(Double(-9.3).abs == Double(9.3), "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(Double(-9.3).abs, Double(9.3))
 	}
 	
 	func testCeil() {
-		XCTAssert(Double(9.3).ceil == Double(10.0), "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(Double(9.3).ceil, Double(10.0))
 	}
 	
 	func testDegreesToRadians() {
-		XCTAssert(Double(180).degreesToRadians == M_PI, "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(Double(180).degreesToRadians, Double.pi)
 	}
 	
 	func testRandomBetween() {
-		XCTAssert(Double.randomBetween(min: 1, max: 5) > 0 && Double.randomBetween(min: 1, max: 5) < 5, "Couldn't get correct value for \(#function)")
+		XCTAssertGreaterThan(Double.random(between: 1, and: 5), 0)
+		XCTAssertLessThan(Double.random(between: 1, and: 5), 6)
+		
+		XCTAssertGreaterThan(Double(randomBetween: 1, and: 5), 0)
+		XCTAssertLessThan(Double(randomBetween: 1, and: 5), 6)
+		
+		XCTAssertGreaterThan(Double.random(inRange: 1...5), 0)
+		XCTAssertLessThan(Double.random(inRange: 1...5), 6)
+		
+		XCTAssertGreaterThan(Double(randomInRange: 1...5), 0)
+		XCTAssertLessThan(Double(randomInRange: 1...5), 6)
 	}
 	
 	func testFloor() {
-		XCTAssert(Double(9.3).floor == Double(9.0), "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(Double(9.3).floor, Double(9.0))
+	}
+	
+	func testIsPositive() {
+		XCTAssert(Double(1).isPositive)
+		XCTAssertFalse(Double(0).isPositive)
+		XCTAssertFalse(Double(-1).isPositive)
+	}
+	
+	func testIsNegative() {
+		XCTAssert(Double(-1).isNegative)
+		XCTAssertFalse(Double(0).isNegative)
+		XCTAssertFalse(Double(1).isNegative)
+	}
+	
+	func testInt() {
+		XCTAssertEqual(Double(-1).int, -1)
+		XCTAssertEqual(Double(2).int, 2)
+		XCTAssertEqual(Double(4.3).int, 4)
+	}
+	
+	func testFloat() {
+		XCTAssertEqual(Double(-1).float, Float(-1))
+		XCTAssertEqual(Double(2).float, Float(2))
+		XCTAssertEqual(Double(4.3).float, Float(4.3))
+	}
+	
+	func testCGFloat() {
+		XCTAssertEqual(Double(4.3).cgFloat, CGFloat(4.3))
+	}
+	
+	func testString() {
+		XCTAssertEqual(Double(2.3).string, "2.3")
 	}
 	
 	func testRadiansToDegrees() {
-		XCTAssert(Double(M_PI).radiansToDegrees == Double(180), "Couldn't get correct value for \(#function)")
+		XCTAssertEqual(Double.pi.radiansToDegrees, Double(180))
 	}
 	
 	func testOperators() {
-		XCTAssert((Double(5.0) ** Double(2.0)) == Double(25.0), "Couldn't get correct value for \(#function)")
-		
-		XCTAssert((Double(5.0) ± Double(2.0)) == (Double(3.0), Double(7.0)) || (Double(5.0) ± Double(2.0)) == (Double(7.0), Double(3.0)), "Couldn't get correct value for \(#function)")
-		
-		XCTAssert((±Double(2.0)) == (Double(2.0), Double(-2.0)) || (±Double(2.0)) == (Double(-2.0), Double(2.0)), "Couldn't get correct value for \(#function)")
-		
-		XCTAssert((√Double(25.0)) == Double(5.0), "Couldn't get correct value for \(#function)")
+		XCTAssertEqual((Double(5.0) ** Double(2.0)), Double(25.0))
+		XCTAssert((Double(5.0) ± Double(2.0)) == (Double(3.0), Double(7.0)) || (Double(5.0) ± Double(2.0)) == (Double(7.0), Double(3.0)))
+		XCTAssert((±Double(2.0)) == (Double(2.0), Double(-2.0)) || (±Double(2.0)) == (Double(-2.0), Double(2.0)))
+		XCTAssertEqual((√Double(25.0)), Double(5.0))
 	}
+	
+	func testAsLocaleCurrency() {
+		let num = Double(10.23)
+		if let symbol = Locale.current.currencySymbol {
+			XCTAssert(num.asLocaleCurrency.contains(symbol))
+		}
+		XCTAssert(num.asLocaleCurrency.contains("\(num)"))
+	}
+	
 }

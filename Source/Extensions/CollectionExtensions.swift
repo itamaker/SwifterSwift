@@ -14,15 +14,15 @@ public extension Collection {
 	
 	private func indicesArray() -> [Self.Index] {
 		var indices: [Self.Index] = []
-		var index = self.startIndex
-		while index != self.endIndex {
-			indices.append(index)
-			index = self.index(after: index)
+		var anIndex = startIndex
+		while anIndex != endIndex {
+			indices.append(anIndex)
+			anIndex = index(after: anIndex)
 		}
 		return indices
 	}
 	
-	/// SwifterSwift: performs `each` closure for each element of collection in parallel.
+	/// SwifterSwift: Performs `each` closure for each element of collection in parallel.
 	///
 	/// - Parameter each: closure to run for each element.
 	public func forEachInParallel(_ each: (Self.Iterator.Element) -> ()) {
@@ -32,5 +32,17 @@ public extension Collection {
 			let elementIndex = indices[index]
 			each(self[elementIndex])
 		}
+	}
+}
+
+extension Collection where Indices.Iterator.Element == Index {
+	
+	/// SwifterSwift: Safe protects the array from out of bounds by use of optional.
+	///
+	///- Parameter index: Index of element to access element.
+	///- Returns: Optional element at index (if applicable).
+	///- Usage: array[safe: index]
+	public subscript (safe index: Index) -> Generator.Element? {
+		return indices.contains(index) ? self[index] : nil
 	}
 }
